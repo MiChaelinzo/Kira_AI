@@ -105,8 +105,8 @@ Kira needs these services to work. **Don't worry - all free tiers/trials!**
 
 ### Step 6: Get an AI Model
 1. **Download a model file** (these are Kira's "brain"):
-   - **Recommended for 8GB+ VRAM**: [Phi-3-mini-4k-instruct-fp16.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~7GB) - Best quality
-   - **Recommended for 6GB VRAM**: [Phi-3-mini-4k-instruct-q4.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~2.4GB) - Good balance
+   - **Recommended for 8GB+ VRAM**: [Phi-3-mini-4k-instruct-fp16.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/tree/main) (~7GB) - Best quality
+   - **Recommended for 6GB VRAM**: [Phi-3-mini-4k-instruct-q4.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/tree/main) (~2.4GB) - Good balance
    - **Alternative**: [Llama-3.2-3B-Instruct-Q4_K_M.gguf](https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF) (~2GB)
    
 2. **Put the file** in the `models/` folder in your Kira directory (create it if it doesn't exist)

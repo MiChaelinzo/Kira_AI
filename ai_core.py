@@ -144,7 +144,8 @@ INTERACTION TOOLS: You have the power to control the stream.
 To start a poll, include this in your text: [POLL: Question | Option1 | Option2]
 To acknowledge a song request, include this: [SONG: Song Name]"""
 
-        print(f"   LLM loaded. (Ctx: {N_CTX} | Batch: {N_BATCH})")
+        model_type = 'Phi-3' if is_phi3 else 'Llama' if is_llama else 'Generic GGUF'
+        print(f"   LLM loaded ({model_type}). (Ctx: {N_CTX} | Batch: {N_BATCH})")
 
     def _init_whisper(self):
         print("-> Loading Faster-Whisper STT model...")
