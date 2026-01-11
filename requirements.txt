@@ -4,20 +4,27 @@ pyttsx3
 SpeechRecognition
 pyaudio
 numpy
-# For GPU support, llama-cpp-python needs to be installed with specific flags.
-# Please see the installation instructions.
+# llama-cpp-python requires C++ build tools on Windows.
+# Windows users: Install Visual Studio Build Tools 2022 with "Desktop development with C++" workload first.
+# Then install separately with: pip install llama-cpp-python
+# For CUDA/GPU support: set CMAKE_ARGS=-DGGML_CUDA=on && pip install llama-cpp-python --force-reinstall
+# Or use pre-built wheels: pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 llama-cpp-python
+# For STT (Speech-to-Text) with Whisper
+faster-whisper
 # For advanced VAD and high-quality TTS
 webrtcvad-wheels
 elevenlabs
 # For screen capture
 Pillow
 # For finding the game window on Windows
-pywin32
+pywin32; sys_platform == 'win32'
 # For web search
 google-api-python-client
 # For advanced memory (vector database)
 chromadb
 sentence-transformers
-
-
+# For environment variable management
+python-dotenv
+# For audio playback
+pygame
