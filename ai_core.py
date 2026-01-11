@@ -97,24 +97,41 @@ class AI_Core:
     def _init_llm(self):
         print(f"-> Loading LLM model... (GPU Layers: {N_GPU_LAYERS})")
         if not os.path.exists(LLM_MODEL_PATH):
-            raise FileNotFoundError(f"LLM model not found at {LLM_MODEL_PATH}")
-        # Optimized for RTX 5080: n_threads=8, Flash Attention enabled, Force GPU Layers=-1
-        # Updated for Gemma 3 (RTX 5080 Maximum Optimization)
-        self.llm = Llama(
-            model_path=LLM_MODEL_PATH, 
-            n_gpu_layers=N_GPU_LAYERS,
-            n_ctx=N_CTX,
-            n_batch=N_BATCH,
-            n_ubatch=N_BATCH,      # Match n_batch
-            n_ctx_keep=200,        # Ensure her core identity/system prompt never gets deleted
-            context_erase=0.5,     # When she hits max context, she'll forget the oldest 50%
-            flash_attn=True,
-            offload_kqv=True,      # Keep attention math on the chip
-            use_mmap=True,
-            use_mlock=True,        # Forces Windows to keep this in memory
-            n_threads=8,
-            verbose=False
-        )
+            raise FileNotFoundError(f"LLM model not found at {LLM_MODEL_PATH}. "
+                                    f"Please download a GGUF model and place it in the models/ directory. "
+                                    f"See INSTALLATION.md for details.")
+        
+        # Detect model type from filename for optimized settings
+        model_name = os.path.basename(LLM_MODEL_PATH).lower()
+        is_phi3 = "phi-3" in model_name or "phi3" in model_name
+        is_llama = "llama" in model_name
+        
+        print(f"   Model detected: {'Phi-3' if is_phi3 else 'Llama' if is_llama else 'Generic GGUF'}")
+        
+        # Build Llama parameters - some parameters may not be available in all versions
+        llama_params = {
+            "model_path": LLM_MODEL_PATH,
+            "n_gpu_layers": N_GPU_LAYERS,
+            "n_ctx": N_CTX,
+            "n_batch": N_BATCH,
+            "use_mmap": True,
+            "verbose": False
+        }
+        
+        # Try to add optional parameters that may not be available in all llama-cpp-python versions
+        try:
+            self.llm = Llama(
+                **llama_params,
+                n_ubatch=N_BATCH,      # Match n_batch
+                flash_attn=True,
+                offload_kqv=True,      # Keep attention math on the chip
+                use_mlock=True,        # Forces Windows to keep this in memory
+                n_threads=8,
+            )
+        except TypeError as e:
+            # Fallback for older llama-cpp-python versions without some parameters
+            print(f"   Note: Using basic parameters (some advanced options not available)")
+            self.llm = Llama(**llama_params)
         
         self.system_prompt = """You are Kira, 19yo AI girl. 
 [STRICT RULES]
@@ -127,7 +144,7 @@ INTERACTION TOOLS: You have the power to control the stream.
 To start a poll, include this in your text: [POLL: Question | Option1 | Option2]
 To acknowledge a song request, include this: [SONG: Song Name]"""
 
-        print(f"   LLM loaded (Gemma 3). (Ctx: {N_CTX} | Batch: {N_BATCH} | Context Shift: ON | Keep: 200)")
+        print(f"   LLM loaded. (Ctx: {N_CTX} | Batch: {N_BATCH})")
 
     def _init_whisper(self):
         print("-> Loading Faster-Whisper STT model...")

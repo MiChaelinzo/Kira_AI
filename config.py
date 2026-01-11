@@ -5,7 +5,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Model and runtime config (safe to share)
-LLM_MODEL_PATH = os.getenv("LLM_MODEL_PATH", "models/Llama-3.2-3B-Instruct-Q4_K_M.gguf")
+# Supports various GGUF models including Phi-3, Llama-3.2, etc.
+# Example model paths:
+#   models/Phi-3-mini-4k-instruct-fp16.gguf
+#   models/Phi-3-mini-4k-instruct-q4.gguf
+#   models/Llama-3.2-3B-Instruct-Q4_K_M.gguf
+LLM_MODEL_PATH = os.getenv("LLM_MODEL_PATH", "models/Phi-3-mini-4k-instruct-fp16.gguf")
 N_GPU_LAYERS = int(os.getenv("N_GPU_LAYERS", -1))
 N_CTX = int(os.getenv("N_CTX", 4096))
 N_BATCH = int(os.getenv("N_BATCH", 512))

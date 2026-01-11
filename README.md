@@ -34,8 +34,49 @@
 3. **Test it works**: Open Command Prompt/Terminal and type `python --version`
 
 ### Step 3: Install Required Software
-1. **Open Command Prompt/Terminal** in your Kira folder
-2. **Run this command** (copies all needed software):
+
+#### Windows Users - IMPORTANT ⚠️
+`llama-cpp-python` requires Visual Studio Build Tools and CMake. Install these **FIRST**:
+
+1. **Install Visual Studio Build Tools**
+   - Download from [Visual Studio Downloads](https://visualstudio.microsoft.com/downloads/) → "Tools for Visual Studio" → "Build Tools for Visual Studio 2022"
+   - During installation, select **"Desktop development with C++"** workload
+   - Make sure these components are selected:
+     - MSVC v143 - VS 2022 C++ x64/x86 build tools
+     - Windows 11/10 SDK
+     - CMake tools for Windows
+
+2. **Install CMake** (if not included above)
+   - Download from [cmake.org](https://cmake.org/download/)
+   - During installation, check "Add CMake to system PATH"
+
+3. **Open a NEW Command Prompt** (to load the new environment variables)
+
+4. **Install llama-cpp-python** (choose one option):
+   
+   **Option A: CPU-only (easiest)**
+   ```
+   pip install llama-cpp-python
+   ```
+   
+   **Option B: With NVIDIA CUDA support (recommended for GPU)**
+   ```
+   set CMAKE_ARGS=-DGGML_CUDA=on
+   pip install llama-cpp-python --force-reinstall --no-cache-dir
+   ```
+   
+   **Option C: Use pre-built wheels (fastest)**
+   - Download pre-built wheels from [llama-cpp-python releases](https://github.com/abetlen/llama-cpp-python/releases)
+   - Or use: `pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu`
+
+5. **Install remaining dependencies**:
+   ```
+   pip install -r requirements.txt
+   ```
+
+#### Mac/Linux Users
+1. **Open Terminal** in your Kira folder
+2. **Run this command**:
    ```
    pip install -r requirements.txt
    ```
@@ -64,9 +105,16 @@ Kira needs these services to work. **Don't worry - all free tiers/trials!**
 
 ### Step 6: Get an AI Model
 1. **Download a model file** (these are Kira's "brain"):
-   - **Recommended**: [Llama-3.2-3B-Instruct-Q4_K_M.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~2GB)
-   - **Bigger/Smarter**: [Meta-Llama-3-8B-Instruct-Q5_K_M.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~6GB)
-2. **Put the file** in the `models/` folder in your Kira directory
+   - **Recommended for 8GB+ VRAM**: [Phi-3-mini-4k-instruct-fp16.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~7GB) - Best quality
+   - **Recommended for 6GB VRAM**: [Phi-3-mini-4k-instruct-q4.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) (~2.4GB) - Good balance
+   - **Alternative**: [Llama-3.2-3B-Instruct-Q4_K_M.gguf](https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF) (~2GB)
+   
+2. **Put the file** in the `models/` folder in your Kira directory (create it if it doesn't exist)
+
+3. **Update your `.env` file** with the model path:
+   ```
+   LLM_MODEL_PATH=models/Phi-3-mini-4k-instruct-fp16.gguf
+   ```
 
 ### Step 7: Start Kira! 🎉
 1. **Open Command Prompt/Terminal** in your Kira folder
@@ -88,6 +136,27 @@ Kira needs these services to work. **Don't worry - all free tiers/trials!**
 
 **No Twitch chat** → Verify your Twitch OAuth token and channel name in `.env`
 
+### llama-cpp-python Build Errors (Windows)
+
+**"CMake Error: CMAKE_C_COMPILER not set"** or **"nmake not found"**
+→ This means Visual Studio Build Tools is not installed or not properly configured:
+1. Install [Visual Studio Build Tools 2022](https://visualstudio.microsoft.com/downloads/) with "Desktop development with C++" workload
+2. **Open a NEW terminal** after installation (required to load new PATH)
+3. Try installing again: `pip install llama-cpp-python --force-reinstall --no-cache-dir`
+
+**"Building wheel for llama-cpp-python failed"**
+→ Try using pre-built wheels instead:
+```
+pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+```
+
+**For CUDA/GPU support issues:**
+```
+set CMAKE_ARGS=-DGGML_CUDA=on
+set FORCE_CMAKE=1
+pip install llama-cpp-python --force-reinstall --no-cache-dir
+```
+
 ---
 
 ## 🔒 Privacy & Safety
@@ -100,6 +169,7 @@ Kira needs these services to work. **Don't worry - all free tiers/trials!**
 
 ## 💡 Need Help?
 
+- **Detailed Installation Guide**: See [INSTALLATION.md](INSTALLATION.md) for step-by-step platform-specific instructions
 - **Check Issues** tab above for common problems
 - **Create a new Issue** if you're stuck
 - **Join our community** for tips and tricks
